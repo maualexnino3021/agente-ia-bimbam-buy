@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: agente-bimbam-buy
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: pip install -r requirements.txt && python -m src.ingest
+    startCommand: >-
+      streamlit run app_streamlit.py
+      --server.port $PORT
+      --server.address 0.0.0.0
+      --server.headless true
+      --server.enableCORS false
+      --server.enableXsrfProtection false
+    healthCheckPath: /_stcore/health
+    envVars:
+      # Selecciona el proveedor del LLM de chat: "openai" (por defecto) o "gemini"
+      - key: LLM_PROVIDER
+        value: openai
+      # --- OpenAI (LLM de chat y, por defecto, embeddings del RAG) ---
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      # --- Google Gemini (opcional, solo si LLM_PROVIDER=gemini) ---
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      # --- Embeddings del RAG: "openai" (recomendado en Render, liviano) o
+      #     "local" (gratis con sentence-transformers, pero requiere instalar
+      #     requirements-local-embeddings.txt y consume mucha más memoria/build) ---
+      - key: EMBEDDINGS_PROVIDER
+        value: openai
+      - key: OPENAI_EMBEDDING_MODEL
+        value: text-embedding-3-small
+      - key: EMBEDDINGS_MODEL
+        value: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+      # --- Parámetros de chunking / retrieval ---
+      - key: CHUNK_SIZE
+        value: "1000"
+      - key: CHUNK_OVERLAP
+        value: "150"
+      - key: TOP_K
+        value: "4"
+      # --- Rutas ---
+      - key: KNOWLEDGE_BASE_DIR
+        value: data/base_conocimiento
+      - key: VECTORSTORE_DIR
+        value: vectorstore
+      - key: PYTHON_VERSION
+        value: 3.11.9

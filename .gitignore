@@ -1,0 +1,18 @@
+# Entornos
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Variables de entorno
+.env
+
+# Vector store generado
+vectorstore/*
+!vectorstore/.gitkeep
+
+# Streamlit
+.streamlit/
+
+# Sistema
+.DS_Store

@@ -1,0 +1,9 @@
+# Dependencias OPCIONALES, solo necesarias si eliges EMBEDDINGS_PROVIDER=local
+# en tu .env. Instala con:
+#   pip install -r requirements-local-embeddings.txt
+#
+# Incluyen PyTorch (varios cientos de MB de descarga) y el modelo de
+# sentence-transformers. NO se recomienda instalarlas en Render (plan free,
+# 512 MB de RAM): usa EMBEDDINGS_PROVIDER=openai para desplegar ahí.
+langchain-huggingface==0.1.2
+sentence-transformers==3.3.1
